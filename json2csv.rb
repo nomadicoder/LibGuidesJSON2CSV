@@ -19,13 +19,11 @@ keys.reject! { |k| exclude.include?(k) }                 # =>
 # Generate the CSV string
 CSV.open(target_filename, "w", headers: true) do |csv|
   csv << keys
-  JSON.parse(File.open(source_filename).read).each do |hash|
-    hash_docs.each do |hash|
-      csv << keys.map { |k|
-        value = hash.fetch(k, "")
-        value
-      }
-    end
+  hash_docs.each do |hash|
+    csv << keys.map { |k|
+      value = hash.fetch(k, "")
+      value.kind_of?(Array)? value.join(", ") : value
+    }
   end
 end
 
